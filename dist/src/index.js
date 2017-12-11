@@ -1,7 +1,16 @@
-import './style.css';
-import { Student } from './student';
-function greeter(person) {
-    return "Hello, " + person.fullName;
+function pong() {
+    var canvas;
+    var ctx;
+    canvas = document.getElementById('pong');
+    ctx = canvas.getContext("2d");
+    gameLoop();
+    function gameLoop() {
+        requestAnimationFrame(gameLoop);
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, 1500, 720);
+        ctx.beginPath();
+    }
 }
-var user = new Student("Johnny", "B.", "Good");
-document.body.innerHTML = greeter(user);
+window.onload = function () {
+    pong();
+};

@@ -1,15 +1,15 @@
 {
   "name": "Pong",
   "version": "1.0.0",
-  "description": "",
+  "description": "A table tennis sports game game built using ES6, Typescript, and Webpack.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Philip Lanphar <philip.lanphar@gmail.com>",
+  "license": "MIT",
   "dependencies": {
     "clean-webpack-plugin": "^0.1.17",
     "css-loader": "^0.28.7",
