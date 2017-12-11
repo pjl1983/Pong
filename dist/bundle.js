@@ -72,12 +72,33 @@ function pong() {
     var ctx;
     canvas = document.getElementById('pong');
     ctx = canvas.getContext("2d");
+    var canvasWidth = canvas.width;
+    var canvasheight = canvas.height;
     gameLoop();
     function ball() {
-        ctx.beginPath();
-        ctx.fillStyle = "#ffffff";
-        ctx.arc(100, 100, 10, 0, 2 * Math.PI);
-        ctx.fill();
+        var x = 10;
+        var y = canvasheight / 2;
+        function ballDirection() {
+            var dx = 2;
+            var dy = -2;
+            if (x + dx > canvas.width - 10 || x + dx < 10) {
+                dx = -dx;
+            }
+            if (y + dy > canvas.height - 10 || y + dy < 10) {
+                dy = -dy;
+            }
+            x += dx;
+            y += dy;
+            console.log(x, y);
+        }
+        function ballDraw() {
+            ballDirection();
+            ctx.beginPath();
+            ctx.fillStyle = "#ffffff";
+            ctx.arc(x, y, 10, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+        ballDraw();
     }
     function gameLoop() {
         requestAnimationFrame(gameLoop);
