@@ -76,17 +76,17 @@ function pong() {
     ctx.canvas.height = window.innerHeight;
     var canvasWidth = canvas.width;
     var canvasHeight = canvas.height;
-    var x = 20;
+    var x = 70;
     var y = canvasHeight / 2;
     var a = 10;
     var b = 10;
-    var paddleX = 0;
+    var paddleX = 50;
     var paddleY = canvasHeight / 2 - 100;
     var direction = 1;
     var score = 0;
     gameLoop();
     function ballDirection() {
-        if (x <= 15 && (y > paddleY && y < paddleY + 200)) {
+        if (x <= 65 && (y > paddleY && y < paddleY + 200)) {
             a = Math.abs(a);
             b = b * direction;
             score = score + 1;
@@ -107,7 +107,8 @@ function pong() {
         }
         x = x + a;
         y = y + b;
-        ctx.font = "50px Comic Sans MS";
+        ctx.font = "50px Arial";
+        // ctx.font = "50px Press Start 2P', cursive;";
         ctx.fillStyle = "#ffffff";
         ctx.textAlign = "center";
         ctx.fillText(score.toString(), canvas.width / 2 - 100, 100);
@@ -142,6 +143,7 @@ function pong() {
         ctx.beginPath();
         ctx.moveTo(canvasWidth / 2, 0);
         ctx.lineTo(canvasWidth / 2, canvasHeight);
+        ctx.setLineDash([5]);
         ctx.strokeStyle = '#ffffff';
         ctx.stroke();
     }
