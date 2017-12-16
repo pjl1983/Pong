@@ -76,37 +76,45 @@ function pong() {
     ctx.canvas.height = window.innerHeight;
     var canvasWidth = canvas.width;
     var canvasHeight = canvas.height;
-    var x = 70;
-    var y = canvasHeight / 2;
-    var a = 10;
-    var b = 10;
+    var ballPosX = 70;
+    var ballPosY = canvasHeight / 2;
+    var ballmoveX = 15;
+    var ballmoveY = 15;
+    var paddleMoveSpeed = 30;
     var paddleX = 50;
     var paddleY = canvasHeight / 2 - 100;
     var direction = 1;
     var score = 0;
+    var keycode = null;
+    var keypress = false;
     gameLoop();
+    var ballOffset = 0;
     function ballDirection() {
-        if (x <= 65 && (y > paddleY && y < paddleY + 200)) {
-            a = Math.abs(a);
-            b = b * direction;
+        if (ballPosX <= 85 && (ballPosY > paddleY && ballPosY < paddleY + 200)) {
+            ballmoveX = Math.abs(ballmoveX);
+            ballmoveY = ballmoveY * direction;
             score = score + 1;
+            ballmoveX = ballmoveX + 1;
+            ballmoveY = ballmoveY + 1;
+            ballOffset = Math.floor(Math.random() * (10 - (-10)) + (-10));
+            ballPosY = ballPosY + ballOffset;
         }
         else {
-            if (x >= canvasWidth) {
-                a = -a;
+            if (ballPosX >= canvasWidth) {
+                ballmoveX = -ballmoveX;
             }
-            else if (x < 5) {
-                a = Math.abs(a);
+            else if (ballPosX < 5) {
+                ballmoveX = Math.abs(ballmoveX);
             }
-            if (y >= canvasHeight) {
-                b = -b;
+            if (ballPosY >= canvasHeight) {
+                ballmoveY = -ballmoveY;
             }
-            else if (y < 5) {
-                b = Math.abs(b);
+            else if (ballPosY < 5) {
+                ballmoveY = Math.abs(ballmoveY);
             }
         }
-        x = x + a;
-        y = y + b;
+        ballPosX = ballPosX + ballmoveX;
+        ballPosY = ballPosY + ballmoveY;
         ctx.font = "50px Arial";
         // ctx.font = "50px Press Start 2P', cursive;";
         ctx.fillStyle = "#ffffff";
@@ -117,7 +125,7 @@ function pong() {
         ballDirection();
         ctx.beginPath();
         ctx.fillStyle = "#ffffff";
-        ctx.arc(x, y, 10, 0, 2 * Math.PI);
+        ctx.arc(ballPosX, ballPosY, 10, 0, 2 * Math.PI);
         ctx.fill();
     }
     function paddleDraw() {
@@ -125,17 +133,25 @@ function pong() {
         ctx.fillRect(paddleX, paddleY, 15, 200);
     }
     document.addEventListener('keydown', function (event) {
-        if (event.keyCode === 38 && paddleY > 0) {
-            paddleY = paddleY - 50;
-            direction = -1;
+        keycode = event.keyCode;
+        keypress = true;
+    }, true);
+    document.addEventListener('keyup', function (event) {
+        keypress = false;
+    }, true);
+    function paddlemove() {
+        if (keypress) {
+            if (keycode === 38 && paddleY > 0) {
+                paddleY = paddleY - paddleMoveSpeed;
+                direction = -1;
+            }
+            else if (keycode === 40 && paddleY < canvasHeight - 200) {
+                paddleY = paddleY + paddleMoveSpeed;
+                direction = 1;
+            }
         }
-        else if (event.keyCode === 40 && paddleY < canvasHeight - 200) {
-            paddleY = paddleY + 50;
-            direction = 1;
-        }
-    }, false);
+    }
     function gameLoop() {
-        requestAnimationFrame(gameLoop);
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
         ballDraw();
@@ -146,6 +162,8 @@ function pong() {
         ctx.setLineDash([5]);
         ctx.strokeStyle = '#ffffff';
         ctx.stroke();
+        paddlemove();
+        requestAnimationFrame(gameLoop);
     }
 }
 window.onload = function () {
