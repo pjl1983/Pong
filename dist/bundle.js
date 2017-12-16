@@ -90,6 +90,13 @@ function pong() {
     var ballOffset = 0;
     var gameOver = false;
     gameLoop();
+    document.addEventListener('keydown', function (event) {
+        keyCode = event.keyCode;
+        keyPress = true;
+    }, true);
+    document.addEventListener('keyup', function (event) {
+        keyPress = false;
+    }, true);
     function ballDirection() {
         if (ballPosX <= 85 && (ballPosY > paddleY && ballPosY < paddleY + 200)) {
             ballMoveX = Math.abs(ballMoveX);
@@ -99,6 +106,9 @@ function pong() {
             ballMoveY = ballMoveY + 1;
             ballOffset = Math.floor(Math.random() * (10 - (-10)) + (-10));
             ballPosY = ballPosY + ballOffset;
+        }
+        else if (ballPosX >= canvasWidth - 85) {
+            ballMoveX = -ballMoveX;
         }
         else if (ballPosX <= 30) {
             gameOver = true;
@@ -135,6 +145,22 @@ function pong() {
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(paddleX, paddleY, 15, 200);
     }
+    function opponentPaddleDraw() {
+        var alignPaddle = function () {
+            var number = ballPosY - 100;
+            if (number <= 20) {
+                return 0;
+            }
+            else if (number > canvasHeight - 230) {
+                return canvasHeight - 200;
+            }
+            else {
+                return number;
+            }
+        };
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(canvasWidth - 70, alignPaddle(), 15, 200);
+    }
     document.addEventListener('keydown', function (event) {
         if (event.keyCode === 89) {
             ballPosX = 90;
@@ -151,13 +177,6 @@ function pong() {
             ballOffset = 0;
             gameOver = false;
         }
-    }, true);
-    document.addEventListener('keydown', function (event) {
-        keyCode = event.keyCode;
-        keyPress = true;
-    }, true);
-    document.addEventListener('keyup', function (event) {
-        keyPress = false;
     }, true);
     function paddlemove() {
         if (keyPress) {
@@ -187,6 +206,7 @@ function pong() {
         if (!gameOver) {
             ballDraw();
             paddleDraw();
+            opponentPaddleDraw();
             ctx.beginPath();
             ctx.moveTo(canvasWidth / 2, 0);
             ctx.lineTo(canvasWidth / 2, canvasHeight);

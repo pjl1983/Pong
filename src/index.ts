@@ -40,6 +40,8 @@ function pong(): any {
             ballMoveY = ballMoveY + 1;
             ballOffset = Math.floor(Math.random() * (10 - (-10)) + (-10));
             ballPosY = ballPosY + ballOffset;
+        } else if (ballPosX >= canvasWidth - 85) {
+            ballMoveX = -ballMoveX;
         } else if (ballPosX <= 30) {
             gameOver = true;
         } else {
@@ -76,22 +78,38 @@ function pong(): any {
         ctx.fillRect(paddleX, paddleY, 15, 200);
     }
 
+    function opponentPaddleDraw(): void {
+        let alignPaddle = (): number => {
+            const number = ballPosY - 100;
+            if (number <= 20) {
+                return 0;
+            } else if (number > canvasHeight - 230) {
+                return canvasHeight - 200;
+            } else {
+                return number;
+            }
+        };
+
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(canvasWidth - 70, alignPaddle(), 15, 200);
+    }
+
     document.addEventListener('keydown', (event) => {
-       if (event.keyCode === 89) {
-           ballPosX = 90;
-           ballPosY = canvasHeight / 2;
-           ballMoveX = 10;
-           ballMoveY = 10;
-           paddleMoveSpeed = 30;
-           paddleX = 50;
-           paddleY = canvasHeight / 2 - 100;
-           direction = 1;
-           score = 0;
-           keyCode = null;
-           keyPress = false;
-           ballOffset = 0;
-           gameOver = false;
-       }
+        if (event.keyCode === 89) {
+            ballPosX = 90;
+            ballPosY = canvasHeight / 2;
+            ballMoveX = 10;
+            ballMoveY = 10;
+            paddleMoveSpeed = 30;
+            paddleX = 50;
+            paddleY = canvasHeight / 2 - 100;
+            direction = 1;
+            score = 0;
+            keyCode = null;
+            keyPress = false;
+            ballOffset = 0;
+            gameOver = false;
+        }
     }, true);
 
     function paddlemove(): void {
@@ -124,6 +142,7 @@ function pong(): any {
         if (!gameOver) {
             ballDraw();
             paddleDraw();
+            opponentPaddleDraw();
             ctx.beginPath();
             ctx.moveTo(canvasWidth / 2, 0);
             ctx.lineTo(canvasWidth / 2, canvasHeight);
