@@ -76,10 +76,10 @@ function pong() {
     ctx.canvas.height = window.innerHeight;
     var canvasWidth = canvas.width;
     var canvasHeight = canvas.height;
-    var ballPosX = 70;
+    var ballPosX = 90;
     var ballPosY = canvasHeight / 2;
-    var ballmoveX = 15;
-    var ballmoveY = 15;
+    var ballmoveX = 10;
+    var ballmoveY = 10;
     var paddleMoveSpeed = 30;
     var paddleX = 50;
     var paddleY = canvasHeight / 2 - 100;
@@ -87,8 +87,8 @@ function pong() {
     var score = 0;
     var keycode = null;
     var keypress = false;
-    gameLoop();
     var ballOffset = 0;
+    gameLoop();
     function ballDirection() {
         if (ballPosX <= 85 && (ballPosY > paddleY && ballPosY < paddleY + 200)) {
             ballmoveX = Math.abs(ballmoveX);

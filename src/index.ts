@@ -7,47 +7,45 @@ function pong(): any {
     ctx.canvas.height = window.innerHeight;
     let canvasWidth: number = canvas.width;
     let canvasHeight: number = canvas.height;
-    let ballPosX: number = 70;
+    let ballPosX: number = 90;
     let ballPosY: number = canvasHeight / 2;
-    let ballmoveX: number = 15;
-    let ballmoveY: number = 15;
+    let ballMoveX: number = 10;
+    let ballMoveY: number = 10;
     let paddleMoveSpeed: number = 30;
     let paddleX: number = 50;
     let paddleY: number = canvasHeight / 2 - 100;
     let direction: number = 1;
     let score: number = 0;
-    let keycode: number = null;
-    let keypress: boolean = false;
+    let keyCode: number = null;
+    let keyPress: boolean = false;
     let ballOffset: number = 0;
     gameLoop();
 
     function ballDirection(): void {
-
         if (ballPosX <= 85 && (ballPosY > paddleY && ballPosY < paddleY + 200)) {
-            ballmoveX = Math.abs(ballmoveX);
-            ballmoveY = ballmoveY * direction;
+            ballMoveX = Math.abs(ballMoveX);
+            ballMoveY = ballMoveY * direction;
             score = score + 1;
-            ballmoveX = ballmoveX + 1;
-            ballmoveY = ballmoveY + 1;
+            ballMoveX = ballMoveX + 1;
+            ballMoveY = ballMoveY + 1;
             ballOffset = Math.floor(Math.random() * (10 - (-10)) + (-10));
             ballPosY = ballPosY + ballOffset;
         } else {
             if (ballPosX >= canvasWidth) {
-                ballmoveX = -ballmoveX;
+                ballMoveX = -ballMoveX;
             } else if (ballPosX < 5) {
-                ballmoveX = Math.abs(ballmoveX);
+                ballMoveX = Math.abs(ballMoveX);
             }
             if (ballPosY >= canvasHeight) {
-                ballmoveY = -ballmoveY;
+                ballMoveY = -ballMoveY;
             } else if (ballPosY < 5) {
-                ballmoveY = Math.abs(ballmoveY);
+                ballMoveY = Math.abs(ballMoveY);
             }
         }
-        ballPosX = ballPosX + ballmoveX;
-        ballPosY = ballPosY + ballmoveY;
+        ballPosX = ballPosX + ballMoveX;
+        ballPosY = ballPosY + ballMoveY;
 
         ctx.font = "50px Arial";
-        // ctx.font = "50px Press Start 2P', cursive;";
         ctx.fillStyle = "#ffffff";
         ctx.textAlign = "center";
         ctx.fillText(score.toString(), canvas.width / 2 - 100, 100);
@@ -67,28 +65,28 @@ function pong(): any {
     }
 
     document.addEventListener('keydown', (event) => {
-        keycode = event.keyCode;
-        keypress = true;
+        keyCode = event.keyCode;
+        keyPress = true;
     }, true);
 
     document.addEventListener('keyup', (event) => {
-        keypress = false;
+        keyPress = false;
     }, true);
 
-    function paddlemove() {
-        if (keypress) {
-            if (keycode === 38 && paddleY > 0) {
+    function paddlemove(): void {
+        if (keyPress) {
+            if (keyCode === 38 && paddleY > 0) {
                 paddleY = paddleY - paddleMoveSpeed;
                 direction = -1;
             }
-            else if (keycode === 40 && paddleY < canvasHeight - 200) {
+            else if (keyCode === 40 && paddleY < canvasHeight - 200) {
                 paddleY = paddleY + paddleMoveSpeed;
                 direction = 1;
             }
         }
     }
 
-    function gameLoop() {
+    function gameLoop(): void {
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
         ballDraw();
@@ -104,7 +102,7 @@ function pong(): any {
     }
 }
 
-window.onload = () => {
+window.onload = (): void => {
     pong();
 };
 
