@@ -74,6 +74,8 @@ function pong() {
     ctx = canvas.getContext("2d");
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
+    var e4 = new Audio('../E4.wav');
+    var e5 = new Audio('../E5.wav');
     var canvasWidth = canvas.width;
     var canvasHeight = canvas.height;
     var ballPosX = 90;
@@ -99,6 +101,7 @@ function pong() {
     }, true);
     function ballDirection() {
         if (ballPosX <= 85 && (ballPosY > paddleY && ballPosY < paddleY + 200)) {
+            e4.play();
             ballMoveX = Math.abs(ballMoveX);
             ballMoveY = ballMoveY * direction;
             score = score + 1;
@@ -109,6 +112,7 @@ function pong() {
         }
         else if (ballPosX >= canvasWidth - 85) {
             ballMoveX = -ballMoveX;
+            e5.play();
         }
         else if (ballPosX <= 30) {
             gameOver = true;
@@ -129,10 +133,10 @@ function pong() {
         }
         ballPosX = ballPosX + ballMoveX;
         ballPosY = ballPosY + ballMoveY;
-        ctx.font = "50px Arial";
+        ctx.font = "60px Arial";
         ctx.fillStyle = "#ffffff";
         ctx.textAlign = "center";
-        ctx.fillText(score.toString(), canvas.width / 2 - 100, 100);
+        ctx.fillText(score.toString(), canvas.width / 2 - 60, 75);
     }
     function ballDraw() {
         ballDirection();
