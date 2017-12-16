@@ -19,7 +19,17 @@ function pong(): any {
     let keyCode: number = null;
     let keyPress: boolean = false;
     let ballOffset: number = 0;
+    let gameOver: boolean = false;
     gameLoop();
+
+    document.addEventListener('keydown', (event) => {
+        keyCode = event.keyCode;
+        keyPress = true;
+    }, true);
+
+    document.addEventListener('keyup', (event) => {
+        keyPress = false;
+    }, true);
 
     function ballDirection(): void {
         if (ballPosX <= 85 && (ballPosY > paddleY && ballPosY < paddleY + 200)) {
@@ -30,6 +40,8 @@ function pong(): any {
             ballMoveY = ballMoveY + 1;
             ballOffset = Math.floor(Math.random() * (10 - (-10)) + (-10));
             ballPosY = ballPosY + ballOffset;
+        } else if (ballPosX <= 30) {
+            gameOver = true;
         } else {
             if (ballPosX >= canvasWidth) {
                 ballMoveX = -ballMoveX;
@@ -65,12 +77,21 @@ function pong(): any {
     }
 
     document.addEventListener('keydown', (event) => {
-        keyCode = event.keyCode;
-        keyPress = true;
-    }, true);
-
-    document.addEventListener('keyup', (event) => {
-        keyPress = false;
+       if (event.keyCode === 89) {
+           ballPosX = 90;
+           ballPosY = canvasHeight / 2;
+           ballMoveX = 10;
+           ballMoveY = 10;
+           paddleMoveSpeed = 30;
+           paddleX = 50;
+           paddleY = canvasHeight / 2 - 100;
+           direction = 1;
+           score = 0;
+           keyCode = null;
+           keyPress = false;
+           ballOffset = 0;
+           gameOver = false;
+       }
     }, true);
 
     function paddlemove(): void {
@@ -86,18 +107,33 @@ function pong(): any {
         }
     }
 
+    function restart(): void {
+        ctx.font = "50px Arial";
+        ctx.fillStyle = "#ffffff";
+        ctx.textAlign = "center";
+        ctx.fillText('Would You like to play again?', canvas.width / 2, 300);
+        ctx.font = "25px Arial";
+        ctx.fillStyle = "#ffffff";
+        ctx.textAlign = "center";
+        ctx.fillText('(Press Y to begin)', canvas.width / 2, 400);
+    }
+
     function gameLoop(): void {
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-        ballDraw();
-        paddleDraw();
-        ctx.beginPath();
-        ctx.moveTo(canvasWidth / 2, 0);
-        ctx.lineTo(canvasWidth / 2, canvasHeight);
-        ctx.setLineDash([5]);
-        ctx.strokeStyle = '#ffffff';
-        ctx.stroke();
-        paddlemove();
+        if (!gameOver) {
+            ballDraw();
+            paddleDraw();
+            ctx.beginPath();
+            ctx.moveTo(canvasWidth / 2, 0);
+            ctx.lineTo(canvasWidth / 2, canvasHeight);
+            ctx.setLineDash([5]);
+            ctx.strokeStyle = '#ffffff';
+            ctx.stroke();
+            paddlemove();
+        } else {
+            restart();
+        }
         requestAnimationFrame(gameLoop);
     }
 }
@@ -105,7 +141,3 @@ function pong(): any {
 window.onload = (): void => {
     pong();
 };
-
-
-
-

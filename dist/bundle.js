@@ -78,45 +78,48 @@ function pong() {
     var canvasHeight = canvas.height;
     var ballPosX = 90;
     var ballPosY = canvasHeight / 2;
-    var ballmoveX = 10;
-    var ballmoveY = 10;
+    var ballMoveX = 10;
+    var ballMoveY = 10;
     var paddleMoveSpeed = 30;
     var paddleX = 50;
     var paddleY = canvasHeight / 2 - 100;
     var direction = 1;
     var score = 0;
-    var keycode = null;
-    var keypress = false;
+    var keyCode = null;
+    var keyPress = false;
     var ballOffset = 0;
+    var gameOver = false;
     gameLoop();
     function ballDirection() {
         if (ballPosX <= 85 && (ballPosY > paddleY && ballPosY < paddleY + 200)) {
-            ballmoveX = Math.abs(ballmoveX);
-            ballmoveY = ballmoveY * direction;
+            ballMoveX = Math.abs(ballMoveX);
+            ballMoveY = ballMoveY * direction;
             score = score + 1;
-            ballmoveX = ballmoveX + 1;
-            ballmoveY = ballmoveY + 1;
+            ballMoveX = ballMoveX + 1;
+            ballMoveY = ballMoveY + 1;
             ballOffset = Math.floor(Math.random() * (10 - (-10)) + (-10));
             ballPosY = ballPosY + ballOffset;
         }
+        else if (ballPosX <= 30) {
+            gameOver = true;
+        }
         else {
             if (ballPosX >= canvasWidth) {
-                ballmoveX = -ballmoveX;
+                ballMoveX = -ballMoveX;
             }
             else if (ballPosX < 5) {
-                ballmoveX = Math.abs(ballmoveX);
+                ballMoveX = Math.abs(ballMoveX);
             }
             if (ballPosY >= canvasHeight) {
-                ballmoveY = -ballmoveY;
+                ballMoveY = -ballMoveY;
             }
             else if (ballPosY < 5) {
-                ballmoveY = Math.abs(ballmoveY);
+                ballMoveY = Math.abs(ballMoveY);
             }
         }
-        ballPosX = ballPosX + ballmoveX;
-        ballPosY = ballPosY + ballmoveY;
+        ballPosX = ballPosX + ballMoveX;
+        ballPosY = ballPosY + ballMoveY;
         ctx.font = "50px Arial";
-        // ctx.font = "50px Press Start 2P', cursive;";
         ctx.fillStyle = "#ffffff";
         ctx.textAlign = "center";
         ctx.fillText(score.toString(), canvas.width / 2 - 100, 100);
@@ -133,36 +136,68 @@ function pong() {
         ctx.fillRect(paddleX, paddleY, 15, 200);
     }
     document.addEventListener('keydown', function (event) {
-        keycode = event.keyCode;
-        keypress = true;
+        if (event.keyCode === 89) {
+            ballPosX = 90;
+            ballPosY = canvasHeight / 2;
+            ballMoveX = 10;
+            ballMoveY = 10;
+            paddleMoveSpeed = 30;
+            paddleX = 50;
+            paddleY = canvasHeight / 2 - 100;
+            direction = 1;
+            score = 0;
+            keyCode = null;
+            keyPress = false;
+            ballOffset = 0;
+            gameOver = false;
+        }
+    }, true);
+    document.addEventListener('keydown', function (event) {
+        keyCode = event.keyCode;
+        keyPress = true;
     }, true);
     document.addEventListener('keyup', function (event) {
-        keypress = false;
+        keyPress = false;
     }, true);
     function paddlemove() {
-        if (keypress) {
-            if (keycode === 38 && paddleY > 0) {
+        if (keyPress) {
+            if (keyCode === 38 && paddleY > 0) {
                 paddleY = paddleY - paddleMoveSpeed;
                 direction = -1;
             }
-            else if (keycode === 40 && paddleY < canvasHeight - 200) {
+            else if (keyCode === 40 && paddleY < canvasHeight - 200) {
                 paddleY = paddleY + paddleMoveSpeed;
                 direction = 1;
             }
         }
     }
+    function restart() {
+        ctx.font = "50px Arial";
+        ctx.fillStyle = "#ffffff";
+        ctx.textAlign = "center";
+        ctx.fillText('Would You like to play again?', canvas.width / 2, 300);
+        ctx.font = "25px Arial";
+        ctx.fillStyle = "#ffffff";
+        ctx.textAlign = "center";
+        ctx.fillText('(Press Y to begin)', canvas.width / 2, 400);
+    }
     function gameLoop() {
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-        ballDraw();
-        paddleDraw();
-        ctx.beginPath();
-        ctx.moveTo(canvasWidth / 2, 0);
-        ctx.lineTo(canvasWidth / 2, canvasHeight);
-        ctx.setLineDash([5]);
-        ctx.strokeStyle = '#ffffff';
-        ctx.stroke();
-        paddlemove();
+        if (!gameOver) {
+            ballDraw();
+            paddleDraw();
+            ctx.beginPath();
+            ctx.moveTo(canvasWidth / 2, 0);
+            ctx.lineTo(canvasWidth / 2, canvasHeight);
+            ctx.setLineDash([5]);
+            ctx.strokeStyle = '#ffffff';
+            ctx.stroke();
+            paddlemove();
+        }
+        else {
+            restart();
+        }
         requestAnimationFrame(gameLoop);
     }
 }
